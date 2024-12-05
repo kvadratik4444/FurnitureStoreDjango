@@ -1,12 +1,12 @@
 {% extends "main/base.html" %}
-{% load static%}
+{% load static %}
 
 {% block content %}
     <div class="row">
         <!-- Форма фильтров -->
         <div class="dropdown mb-2">
             <button class="btn btn-secondary dropdown-toggle btn-dark" type="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
+                    aria-expanded="false">
                 Фильтры
             </button>
 
@@ -20,7 +20,8 @@
                 </div>
                 <p class="text-white mx-3 mt-3">Сортировать:</p>
                 <div class="form-check text-white mx-3">
-                    <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault1" value="default" checked>
+                    <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault1" value="default"
+                           checked>
                     <label class="form-check-label" for="flexRadioDefault1">
                         По умолчанию
                     </label>
@@ -42,39 +43,37 @@
         </div>
 
         {% for product in goods %}
-        	<div class="col-lg-4 col-md-6 p-4">
-            <div class="card border-primary rounded custom-shadow">
-                {% if product.image %}
-                	<img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
-                {% else %}
-                    <img src="{% static "deps/images/Not found image.png" %}" class="card-img-top" alt="...">
-                {% endif %}
-                <div class="card-body">
-                    <a href="{% url "catalog:product" product.slug %}">
-                        <p class="card-title">{{ product.name }}</p>
-                    </a>
-                    <p class="card-text text-truncate">{{ product.description }}.</p>
-                    <p class="product_id">id: {{ product.display_id }}</p>
-                    <div class="d-flex justify-content-between">
-                        {% if product.discount %}
-                            <p><s>{{product.price}}</s> $</p>
-                            <p><strong>{{ product.sell_price }} $</strong></p>
-                            <span class="badge bg-warning text-dark">Скидка {{ product.discount }} %</span>
-                        {% else %}
-                            <p><strong>{{ product.price }} $</strong></p>
-                        {% endif %}
-
-                        <a href="#" class="btn add-to-cart">
-                            <img class="mx-1" src="{% static "deps/icons/cart-plus.svg" %}" alt="Catalog Icon"
-                                width="32" height="32">
+            <div class="col-lg-4 col-md-6 p-4">
+                <div class="card border-primary rounded custom-shadow">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                    {% else %}
+                        <img src="{% static "deps/images/Not found image.png" %}" class="card-img-top" alt="...">
+                    {% endif %}
+                    <div class="card-body">
+                        <a href="{% url "catalog:product" product.slug %}">
+                            <p class="card-title">{{ product.name }}</p>
                         </a>
+                        <p class="card-text">{{ product.description|truncatechars:35 }}.</p>
+                        <p class="product_id">id: {{ product.display_id }}</p>
+                        <div class="d-flex justify-content-between">
+                            {% if product.discount %}
+                                <p><s>{{ product.price }}</s> $</p>
+                                <p><strong>{{ product.sell_price }} $</strong></p>
+                                <span class="badge bg-warning text-dark">Скидка {{ product.discount }} %</span>
+                            {% else %}
+                                <p><strong>{{ product.price }} $</strong></p>
+                            {% endif %}
+
+                            <a href="#" class="btn add-to-cart">
+                                <img class="mx-1" src="{% static "deps/icons/cart-plus.svg" %}" alt="Catalog Icon"
+                                     width="32" height="32">
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         {% endfor %}
-
-
 
 
     </div>
@@ -82,14 +81,26 @@
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center my-4">
             <div class="custom-shadow d-flex">
-                <li class="page-item disabled">
-                  <a class="page-link">Previous</a>
+                <li class="page-item {% if not goods.has_previous %}disabled{% endif %}">
+                    <a class="page-link" href="{% if goods.has_previous %}
+                  {% url "catalog:index" slug_url goods.previous_page_number %}
+                  {% else %}
+                  #
+                  {% endif %}">Назад</a>
                 </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                  <a class="page-link" href="#">Next</a>
+                {% for page in goods.paginator.page_range %}
+                {% if page >= goods.number|add:-2 and page <= goods.number|add:2 %}
+                    <li class="page-item{% if goods.number == page %} active {% endif %}">
+                        <a class="page-link" href="{% url "catalog:index" slug_url page %}">{{ page }}</a>
+                    </li>
+                {% endif %}
+                {% endfor %}
+                <li class="page-item {% if not goods.has_next %}disabled{% endif %}">
+                    <a class="page-link" href="{% if goods.has_next %}
+                  {% url "catalog:index" slug_url goods.next_page_number %}
+                  {% else %}
+                  #
+                  {% endif %}">Следующая</a>
                 </li>
             </div>
         </ul>
@@ -98,8 +109,8 @@
 
 {% block footer %}
     <footer class="py-4 bg-dark">
-    <div class="container">
-        <p class="m-0 text-center text-white">Copyright &copy; Home Python Hub Studio 2023</p>
-    </div>
+        <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; Home Python Hub Studio 2023</p>
+        </div>
     </footer>
 {% endblock %}
