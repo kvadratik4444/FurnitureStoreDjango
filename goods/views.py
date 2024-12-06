@@ -19,14 +19,13 @@ def catalog(request, catalog_slug=None):
     if query:
         goods = q_search(query)
     print(goods)
-
     if on_sale:
         goods = goods.filter(discount__gt=0)
 
     if order_by and order_by != 'default':
         goods = goods.order_by(order_by)
 
-    paginator = Paginator(goods,3)
+    paginator = Paginator(goods,6)
     current_page = paginator.page(int(page))
     context = {
         'title': 'Home - Каталог',

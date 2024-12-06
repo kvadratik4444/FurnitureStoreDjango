@@ -1,0 +1,12 @@
+.pagination-container {
+    margin-top: 20px; /* Отступ от товаров */
+    margin-bottom: 40px; /* Отступ перед футером */
+    text-align: center;
+}
+
+
+.pagination-container {
+    display: flex;
+    justify-content: center; /* Центрирование пагинации */
+}
+
