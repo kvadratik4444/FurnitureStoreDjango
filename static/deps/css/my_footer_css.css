@@ -1,8 +1,7 @@
 footer {
-    position: relative; /* Убираем фиксированное положение */
-    width: 100%; /* Занимает всю ширину страницы */
+    position: fixed;
+    bottom: 0;
+    width: 100%;
     background-color: #343a40;
     padding: 10px 0;
-    text-align: center; /* Центрируем текст внутри футера */
-    margin-top: 30px; /* Добавляем отступ сверху перед футером */
 }
