@@ -73,5 +73,8 @@ def profile(request):
 def logout(request):
     messages.success(request, f'{request.user.username} Logged out successfully')
     auth.logout(request)
-
     return redirect(reverse('main:index'))
+
+
+def users_basket(request):
+    return render(request, 'users/users_basket.html')
