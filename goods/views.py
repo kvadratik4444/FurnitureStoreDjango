@@ -18,7 +18,7 @@ def catalog(request, catalog_slug=None):
 
     if query:
         goods = q_search(query)
-    print(goods)
+
     if on_sale:
         goods = goods.filter(discount__gt=0)
 
