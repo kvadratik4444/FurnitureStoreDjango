@@ -24,6 +24,8 @@ def basket_change(request, product_slug):
     ...
 
 
-def basket_remove(request, product_slug):
-    ...
+def basket_remove(request, basket_id):
+    basket = Basket.objects.get(id=basket_id)
+    basket.delete()
+    return redirect(request.META.get('HTTP_REFERER', '/'))
 
