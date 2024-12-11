@@ -100,8 +100,10 @@
                                 <p><strong>{{ product.price }} $</strong></p>
                             {% endif %}
 
-                            <a href="{% url "basket:basket_add" product.slug %}" class="btn add-to-cart">
-                                <img class="mx-1" src="{% static "deps/icons/cart-plus.svg" %}" alt="Catalog Icon"
+                            <a href="{% url "basket:basket_add" %}" class="btn add-to-basket" id="btn add-to-basket"
+                            data-product-id="{{ product.id }}">
+                                {% csrf_token %}
+                                <img class="mx-1" src="{% static "deps/icons/basket-plus.svg" %}" alt="Catalog Icon"
                                      width="32" height="32">
                             </a>
                         </div>
