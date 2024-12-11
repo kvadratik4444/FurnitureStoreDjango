@@ -84,7 +84,6 @@ $(document).ready(function () {
 
         // делаем post запрос через ajax не перезагружая страницу
         $.ajax({
-
             type: "POST",
             url: remove_from_basket,
             data: {
@@ -95,7 +94,7 @@ $(document).ready(function () {
                 // Сообщение
                 successMessage.html(data.message);
                 successMessage.fadeIn(400);
-                // Через 7сек убираем сообщение
+                // Через 3 сек убираем сообщение
                 setTimeout(function () {
                     successMessage.fadeOut(400);}, 3000);
 
@@ -123,7 +122,7 @@ $(document).ready(function () {
         var url = $(this).data("basket-change-url");
         // Берем id корзины из атрибута data-cart-id
         var basketID = $(this).data("basket-id");
-        // Ищем ближайшеий input с количеством
+        // Ищем ближайший input с количеством
         var $input = $(this).closest('.input-group').find('.number');
         // Берем значение количества товара
         var currentValue = parseInt($input.val());
@@ -143,7 +142,7 @@ $(document).ready(function () {
         // Берем id корзины из атрибута data-cart-id
         var basketID = $(this).data("basket-id");
 
-        // Ищем ближайшеий input с количеством
+        // Ищем ближайший input с количеством
         var $input = $(this).closest('.input-group').find('.number');
         // Берем значение количества товара
         var currentValue = parseInt($input.val());
@@ -156,6 +155,8 @@ $(document).ready(function () {
     });
 
     function updateBasket(basketID, quantity, change, url) {
+        console.log(2)
+
         $.ajax({
             type: "POST",
             url: url,
@@ -171,7 +172,7 @@ $(document).ready(function () {
                 successMessage.fadeIn(400);
                 // Через 7сек убираем сообщение
                 setTimeout(function () {
-                    successMessage.fadeOut(400);}, 7000);
+                    successMessage.fadeOut(400);}, 3000);
 
                 // Изменяем количество товаров в корзине
                 var goodsInBasketCount = $("#goods-in-basket-count");

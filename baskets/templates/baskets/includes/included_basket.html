@@ -13,16 +13,20 @@
                             <span class="input-group-btn">
                                 <button type="button"
                                         class="btn btn-dark btn-sm decrement"
-                                        data-basket-id=""
-                                        data-basket-change-url="">-</button>
+                                        data-basket-id="{{ basket.id }}"
+                                        data-basket-change-url="{% url "basket:basket_change" %}">
+                                        {% csrf_token %}
+                                        -</button>
                             </span>
                         <input type="text" class="form-control number" value="{{ basket.quantity }}"
                                readonly>
                         <span class="input-group-btn">
                                 <button type="button"
                                         class="btn btn-dark btn-sm increment"
-                                        data-basket-id=""
-                                        data-basket-change-url="">+</button>
+                                        data-basket-id="{{ basket.id }}"
+                                        data-basket-change-url="{% url "basket:basket_change" %}">
+                                        {% csrf_token %}
+                                        +</button>
                             </span>
                     </div>
                 </div>
