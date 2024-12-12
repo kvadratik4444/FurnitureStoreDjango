@@ -11,6 +11,7 @@ def basket_add(request):
     product = Products.objects.get(id=product_id)
 
     if request.user.is_authenticated:
+        # Для авторизованного пользователя
         basket, created = Basket.objects.get_or_create(
             user=request.user,
             product=product,
@@ -19,10 +20,26 @@ def basket_add(request):
         if not created:
             basket.quantity += 1
             basket.save()
+    else:
+        # Убедимся, что session_key существует
+        if not request.session.session_key:
+            request.session.create()
 
+        # Для неавторизованного пользователя
+        basket, created = Basket.objects.get_or_create(
+            session_key=request.session.session_key,
+            product=product,
+            defaults={'quantity': 1}
+        )
+        if not created:
+            basket.quantity += 1
+            basket.save()
+
+    # Генерация HTML для обновления корзины на клиенте
     user_basket = get_user_baskets(request)
     basket_items_html = render_to_string(
-        "baskets/includes/included_basket.html", {'baskets': user_basket}, request=request)
+        "baskets/includes/included_basket.html", {'baskets': user_basket}, request=request
+    )
 
     response_data = {
         "message": "Товар добавлен в корзину",
@@ -30,7 +47,6 @@ def basket_add(request):
     }
 
     return JsonResponse(response_data)
-
 
 def basket_change(request):
     basket_id = request.POST.get('basket_id')

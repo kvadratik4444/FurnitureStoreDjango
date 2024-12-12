@@ -4,6 +4,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_list_or_404, redirect
 from django.urls import reverse
 
+from baskets.models import Basket
+
 from users.forms import UserLoginForm, UserRegistrationForm, ProfileForm
 
 
@@ -14,9 +16,15 @@ def login(request):
             username = request.POST['username']
             password = request.POST['password']
             user = auth.authenticate(username=username, password=password)
+
+            session_key = request.session.session_key
+
             if user:
                 auth.login(request, user)
                 messages.success(request, f'{username} successfully logged')
+
+                if session_key:
+                    Basket.objects.filter(session_key=session_key).update(user=user)
 
                 redirect_page = request.POST.get('next', None)
                 if redirect_page and redirect_page != reverse('users:logout'):
@@ -39,8 +47,14 @@ def registration(request):
         form = UserRegistrationForm(data=request.POST)
         if form.is_valid():
             form.save()
+            session_key = request.session.session_key
+
             user = form.instance
             auth.login(request, user)
+
+            if session_key:
+                Basket.objects.filter(session_key=session_key).update(user=user)
+
             messages.success(request, f'{user.username} successfully')
             return HttpResponseRedirect(reverse('main:index'))
     else:
