@@ -51,7 +51,7 @@ def create_order(request):
                         return redirect("user:profile")
             except ValidationError as error:
                 messages.error(request, str(error))
-                return redirect("basket:order")
+                return redirect("orders:order_list")
     else:
         initial = {
             'first_name': request.user.first_name,

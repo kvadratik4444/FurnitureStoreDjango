@@ -20,3 +20,5 @@ class BasketAdmin(admin.ModelAdmin):
         if obj.user:
             return str(obj.user)
         return "Анонимный пользователь"
+
+    user_display.short_description = "Пользователь"

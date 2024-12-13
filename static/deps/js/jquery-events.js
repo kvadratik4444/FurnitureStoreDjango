@@ -17,7 +17,7 @@ $(document).ready(function () {
         $('#exampleModal').modal('hide');
     });
 
-    $("input[name='requires_delivery']").change(function() {
+    $("input[name='requires_delivery']").change(function () {
         var selectedValue = $(this).val();
 
         if (selectedValue === "1") {
@@ -62,7 +62,7 @@ $(document).ready(function () {
 
             },
 
-        error: function (data) {
+            error: function (data) {
                 console.log("Ошибка при добавлении товара в корзину");
             },
 
@@ -96,7 +96,8 @@ $(document).ready(function () {
                 successMessage.fadeIn(400);
                 // Через 3 сек убираем сообщение
                 setTimeout(function () {
-                    successMessage.fadeOut(400);}, 3000);
+                    successMessage.fadeOut(400);
+                }, 3000);
 
                 // Уменьшаем количество товаров в корзине (отрисовка)
                 basketCount -= data.quantity_deleted;
@@ -105,14 +106,13 @@ $(document).ready(function () {
                 // Меняем содержимое корзины на ответ от django (новый отрисованный фрагмент разметки корзины)
                 var basketItemsContainer = $("#basket-items-container");
                 basketItemsContainer.html(data.basket_items_html);
-                },
+            },
 
             error: function (data) {
-                console.log("Ошибка при добавлении товара в корзину");},
+                console.log("Ошибка при добавлении товара в корзину");
+            },
         });
     });
-
-
 
 
     // Теперь + - количества товара
@@ -154,6 +154,29 @@ $(document).ready(function () {
         updateBasket(basketID, currentValue + 1, 1, url);
     });
 
+    document.getElementById('id_phone_number').addEventListener('input', function (e) {
+        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+        e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+    });
+
+
+    // Проверяем на стороне клинта коррекность номера телефона в форме xxx-xxx-хх-хx
+    $('#create_order_form').on('submit', function (event) {
+        var phoneNumber = $('#id_phone_number').val();
+        console.log(phoneNumber)
+        var regex = /^\(\d{3}\) \d{3}-\d{4}$/;
+        if (!regex.test(phoneNumber)) {
+            $('#phone_number_error').show();
+            event.preventDefault();
+        } else {
+            $('#phone_number_error').hide();
+            // Очистка номера телефона от скобок и тире перед отправкой формы
+            var cleanedPhoneNumber = phoneNumber.replace(/[()\-\s]/g, '');
+            $('#id_phone_number').val(cleanedPhoneNumber);
+            console.log(cleanedPhoneNumber)
+        }
+    });
+
     function updateBasket(basketID, quantity, change, url) {
         console.log(2)
 
@@ -172,7 +195,8 @@ $(document).ready(function () {
                 successMessage.fadeIn(400);
                 // Через 7сек убираем сообщение
                 setTimeout(function () {
-                    successMessage.fadeOut(400);}, 3000);
+                    successMessage.fadeOut(400);
+                }, 3000);
 
                 // Изменяем количество товаров в корзине
                 var goodsInBasketCount = $("#goods-in-basket-count");
@@ -183,9 +207,10 @@ $(document).ready(function () {
                 // Меняем содержимое корзины
                 var basketItemsContainer = $("#basket-items-container");
                 basketItemsContainer.html(data.basket_items_html);
-                },
+            },
             error: function (data) {
-                console.log("Ошибка при добавлении товара в корзину");},
+                console.log("Ошибка при добавлении товара в корзину");
+            },
         });
     }
 });

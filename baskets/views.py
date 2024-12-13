@@ -1,6 +1,8 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
+from django.urls import reverse
+
 from baskets.models import Basket
 from goods.models import Products
 from baskets.utils import get_user_baskets
@@ -48,6 +50,7 @@ def basket_add(request):
 
     return JsonResponse(response_data)
 
+
 def basket_change(request):
     basket_id = request.POST.get('basket_id')
     quantity = request.POST.get('quantity')
@@ -56,9 +59,17 @@ def basket_change(request):
 
     basket.quantity = quantity
     basket.save()
+
     user_basket = get_user_baskets(request)
+
+    context = {"baskets": user_basket}
+
+    referer = request.META.get('HTTP_REFERER')
+    if reverse('orders:create_order') in referer:
+        context["order"] = True
+
     basket_items_html = render_to_string(
-        "baskets/includes/included_basket.html", {'baskets': user_basket}, request=request)
+        "baskets/includes/included_basket.html", context, request=request)
 
     response_data = {
         "message": "Количество изменено",
@@ -77,8 +88,15 @@ def basket_remove(request):
     basket.delete()
 
     user_basket = get_user_baskets(request)
+
+    context = {"baskets": user_basket}
+
+    referer = request.META.get('HTTP_REFERER')
+    if reverse('orders:create_order') in referer:
+        context["order"] = True
+
     basket_items_html = render_to_string(
-        "baskets/includes/included_basket.html", {'baskets': user_basket}, request=request)
+        "baskets/includes/included_basket.html", context, request=request)
 
     response_data = {
         "message": "Товар удален из корзины",

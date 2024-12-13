@@ -55,6 +55,10 @@ def registration(request):
             auth.login(request, user)
 
             if session_key:
+                forgot_basket = Basket.objects.filter(user=user)
+                if forgot_basket.exists():
+                    forgot_basket.delete()
+
                 Basket.objects.filter(session_key=session_key).update(user=user)
 
             messages.success(request, f'{user.username} successfully')
