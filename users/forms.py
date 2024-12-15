@@ -9,6 +9,9 @@ class UserLoginForm(AuthenticationForm):
         model = User
         fields = ('username', 'password')
 
+    username = forms.CharField()
+    password = forms.CharField()
+
 
 class UserRegistrationForm(UserCreationForm):
     class Meta:

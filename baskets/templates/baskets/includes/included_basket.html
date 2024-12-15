@@ -59,4 +59,8 @@
     <a class="btn btn-dark" href="{% url "orders:create_order" %}">
     Оформить заказ
     </a>
+{% else %}
+    <a class="btn btn-dark" href="{% url "catalog:index" "all" %}">
+    Перейти в каталог
+    </a>
 {% endif %}
